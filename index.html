@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Интерактивный инструктаж для иностранных студентов: встреча с полицией в России.">
+    <meta name="theme-color" content="#0a0a0a">
+    <title>Инструктаж: Встреча с полицией</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Main Content Area -->
+        <main id="main-content" class="content-wrapper fade-in">
+            <h1 id="title" class="title">Что делать?</h1>
+            <p id="description" class="description">
+                Представьте, что вы очень спешили и решили перебежать пешеходный переход за несколько секунд до того, как загорелся зеленый свет.
+                После этого вас остановил полицейский. Вы иностранный студент, и ваш русский язык пока не очень хорош.
+                Как лучше всего поступить в этой ситуации?
+            </p>
+            <div id="options-container" class="options-container hidden">
+                <div class="option delay-1">
+                    <div class="option-num">1</div>
+                    <p>Сказать, что вы не понимаете по-русски.</p>
+                </div>
+                <div class="option delay-2">
+                    <div class="option-num">2</div>
+                    <p>Предложить взятку полицейскому.</p>
+                </div>
+                <div class="option delay-3">
+                    <div class="option-num">3</div>
+                    <p>Попробовать убежать.</p>
+                </div>
+                <div class="option delay-4">
+                    <div class="option-num">4</div>
+                    <p>Позвонить ответственному лицу из университета и поехать с полицейским в отдел.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Video Overlay -->
+        <div id="video-overlay" class="hidden">
+            <div id="loader" class="loader-container hidden">
+                <div class="spinner"></div>
+                <p>Загрузка видео...</p>
+            </div>
+            <video id="presentation-video" playsinline preload="auto">
+                <source src="" type="video/mp4">
+                Ваш браузер не поддерживает видео.
+            </video>
+        </div>
+
+        <!-- Feedback Overlay -->
+        <div id="feedback-overlay" class="hidden">
+            <div id="feedback-content" class="feedback-icon" role="img"></div>
+            <h2 id="feedback-text" class="feedback-text"></h2>
+        </div>
+
+        <!-- Control Button -->
+        <button id="next-btn" class="btn-next">
+            <span>Далее</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

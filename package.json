@@ -1,0 +1,15 @@
+{
+  "name": "kmu-presentation",
+  "version": "1.0.0",
+  "description": "KMU Presentation Website",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx vite --host"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
