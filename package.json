@@ -4,7 +4,9 @@
   "description": "KMU Presentation Website",
   "main": "index.html",
   "scripts": {
-    "dev": "npx vite --host"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",

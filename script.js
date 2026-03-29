@@ -92,6 +92,7 @@ function updateState() {
     // Reset staggered animations
     document.querySelectorAll('.option').forEach(opt => opt.classList.remove('option-visible'));
     nextBtn.disabled = false;
+    nextBtn.classList.remove('pulse');
 
     // --- STAGE 2: APPLY NEW STATE ---
     if (state.onEnter) {
