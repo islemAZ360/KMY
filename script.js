@@ -227,16 +227,6 @@ document.querySelectorAll('.option').forEach((opt, index) => {
 });
 
 nextBtn.addEventListener('click', (e) => {
-    const currentStateObj = states[currentState];
-    
-    // If we just finished a "wrong" video, go back to CHOICES
-    if (currentStateObj.feedback === 'wrong') {
-        stopVideo();
-        currentState = 1; // CHOICES state
-        updateState();
-        return;
-    }
-
     if (currentState < states.length - 1) {
         stopVideo();
         currentState++;
