@@ -234,17 +234,22 @@ body {
     to { opacity: 1; transform: translate3d(0, 0, 0); }
 }
 
-/* Next Button - Redesigned */
-.btn-next {
+/* Navigation Controls - Redesigned */
+.controls-container {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
     z-index: 500;
+    display: flex;
+    gap: 1rem;
+    pointer-events: none; /* Only buttons within should be clickable */
+}
+
+.controls-container button {
+    pointer-events: auto;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
     border: none;
     border-radius: 50px;
-    color: white;
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
     font-size: 1.1rem;
@@ -254,17 +259,34 @@ body {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, opacity 0.2s ease-out;
+    will-change: transform, box-shadow, opacity;
+}
+
+.btn-next {
+    background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
+    color: white;
     box-shadow: 0 8px 15px rgba(37, 99, 235, 0.3);
-    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-    will-change: transform, box-shadow;
+}
+
+.btn-back {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: white;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.controls-container button:hover:not(:disabled) {
+    transform: translate3d(0, -3px, 0);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn-next:hover:not(:disabled) {
-    transform: translate3d(0, -3px, 0);
     box-shadow: 0 10px 20px rgba(37, 99, 235, 0.4);
 }
 
-.btn-next:disabled {
+.controls-container button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background: #1e293b;

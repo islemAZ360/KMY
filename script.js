@@ -1,5 +1,6 @@
 const app = document.getElementById('app');
 const nextBtn = document.getElementById('next-btn');
+const backBtn = document.getElementById('back-btn');
 const mainContent = document.getElementById('main-content');
 const title = document.getElementById('title');
 const description = document.getElementById('description');
@@ -122,8 +123,14 @@ function updateState() {
 
     // Reset staggered animations
     document.querySelectorAll('.option').forEach(opt => opt.classList.remove('option-visible'));
-    nextBtn.disabled = false;
     nextBtn.classList.remove('pulse');
+
+    // --- STAGE 1.5: NAVIGATION BUTTONS ---
+    if (currentState === 0) {
+        backBtn.classList.add('hidden');
+    } else {
+        backBtn.classList.remove('hidden');
+    }
 
     // --- STAGE 2: APPLY NEW STATE ---
     if (state.onEnter) {
@@ -148,7 +155,6 @@ function updateState() {
 function playVideoSequence(src, type, stateIndex) {
     mainContent.classList.add('hidden');
     videoOverlay.classList.remove('hidden');
-    nextBtn.disabled = true;
 
     // Use preloaded video source if it exists
     const preloaded = preloadedVideos.get(src);
@@ -207,8 +213,6 @@ function showFeedback(type, stateIndex) {
     feedbackOverlay.classList.add(isCorrect ? 'correct-feedback' : 'wrong-feedback');
     feedbackContent.textContent = isCorrect ? '✓' : '✗';
     feedbackText.textContent = isCorrect ? 'Правильное!' : 'Неверно!';
-    
-    nextBtn.disabled = false;
 }
 
 // Options Interaction
@@ -227,26 +231,44 @@ nextBtn.addEventListener('click', (e) => {
     
     // If we just finished a "wrong" video, go back to CHOICES
     if (currentStateObj.feedback === 'wrong') {
+        stopVideo();
         currentState = 1; // CHOICES state
         updateState();
         return;
     }
 
     if (currentState < states.length - 1) {
-        // IMMEDIATE CLEANUP BEFORE INCREMENT
-        video.onended = null;
-        video.onerror = null;
-        video.onplaying = null;
-        try {
-            video.pause();
-        } catch (err) {}
-
+        stopVideo();
         currentState++;
         updateState();
     } else {
         location.reload();
     }
 });
+
+backBtn.addEventListener('click', (e) => {
+    if (currentState > 0) {
+        stopVideo();
+        
+        // If we are on a video screen, go back to CHOICES
+        if (states[currentState].videoSrc) {
+            currentState = 1; // CHOICES state
+        } else {
+            currentState--;
+        }
+        
+        updateState();
+    }
+});
+
+function stopVideo() {
+    video.onended = null;
+    video.onerror = null;
+    video.onplaying = null;
+    try {
+        video.pause();
+    } catch (err) {}
+}
 
 // Initial start
 preloadAllVideos();
