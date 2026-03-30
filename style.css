@@ -105,8 +105,8 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-    cursor: default;
-    transition: transform 0.2s ease-out, background 0.2s ease-out;
+    cursor: pointer;
+    transition: transform 0.2s ease-out, background 0.2s ease-out, border-color 0.2s ease-out;
     opacity: 0;
     transform: translate3d(-10px, 0, 0);
     will-change: transform, opacity;

@@ -62,7 +62,7 @@ const states = [
             title.textContent = 'Правильный выбор!';
             description.innerHTML = `
                 Вам придется подождать в полицейском участке несколько часов, но когда приедет ответственное лицо из университета, он объяснит полицейскому, что вы иностранец и только недавно приехали в Россию. 
-                Скорее всего, вас отпустят или выпишут штраف в размере 500 рублей, если полицейский будет принципиальным, но, по крайней мере, у вас не возникнет других серьезных проблем.
+                Скорее всего, вас отпустят или выпишут штраф в размере 500 рублей, если полицейский будет принципиальным, но, по крайней мере, у вас не возникнет других серьезных проблем.
                 <br><br>
                 <strong>Помните: не стоит совершать необдуманные поступки, даже если мы, например, неправы.</strong>
                 <br><br>
@@ -211,7 +211,27 @@ function showFeedback(type, stateIndex) {
     nextBtn.disabled = false;
 }
 
+// Options Interaction
+document.querySelectorAll('.option').forEach((opt, index) => {
+    opt.addEventListener('click', () => {
+        // Mapping: Option 1 (index 0) -> VIDEO_1 (index 2)
+        // Option 2 (index 1) -> VIDEO_2 (index 3)
+        // etc.
+        currentState = index + 2; 
+        updateState();
+    });
+});
+
 nextBtn.addEventListener('click', (e) => {
+    const currentStateObj = states[currentState];
+    
+    // If we just finished a "wrong" video, go back to CHOICES
+    if (currentStateObj.feedback === 'wrong') {
+        currentState = 1; // CHOICES state
+        updateState();
+        return;
+    }
+
     if (currentState < states.length - 1) {
         // IMMEDIATE CLEANUP BEFORE INCREMENT
         video.onended = null;
