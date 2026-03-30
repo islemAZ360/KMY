@@ -35,22 +35,22 @@ const states = [
     },
     {
         name: 'VIDEO_1',
-        videoSrc: '/video/1.mp4',
+        videoSrc: '/video/1.webm',
         feedback: 'wrong'
     },
     {
         name: 'VIDEO_2',
-        videoSrc: '/video/2.mp4',
+        videoSrc: '/video/2.webm',
         feedback: 'wrong'
     },
     {
         name: 'VIDEO_3',
-        videoSrc: '/video/3.mp4',
+        videoSrc: '/video/3.webm',
         feedback: 'wrong'
     },
     {
         name: 'VIDEO_4',
-        videoSrc: '/video/4.mp4',
+        videoSrc: '/video/4.webm',
         feedback: 'correct'
     },
     {
@@ -68,24 +68,48 @@ const states = [
     }
 ];
 
+// Global Preloader
+const preloadedVideos = new Map();
+
+async function preloadAllVideos() {
+    states.forEach(async (state) => {
+        if (state.videoSrc) {
+            try {
+                const response = await fetch(state.videoSrc);
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                preloadedVideos.set(state.videoSrc, url);
+                console.log(`Preloaded: ${state.videoSrc}`);
+            } catch (err) {
+                // Fallback to invisible video element if fetch fails (CORS issue)
+                const videoElem = document.createElement('video');
+                videoElem.src = state.videoSrc;
+                videoElem.preload = 'auto';
+                videoElem.load();
+                preloadedVideos.set(state.videoSrc, state.videoSrc);
+            }
+        }
+    });
+}
+
 function updateState() {
     const state = states[currentState];
 
     // --- STAGE 1: HARD RESET ---
-    // Kill all video tasks immediately
+    // Kill only event listeners, keep video source if we need it
     video.onended = null;
     video.onerror = null;
     video.onplaying = null;
     video.oncanplay = null;
     video.onwaiting = null;
 
-    // Force hide everything
+    // Force hide overlays
     videoOverlay.classList.add('hidden');
     feedbackOverlay.classList.add('hidden');
     loader.classList.add('hidden');
     mainContent.classList.remove('hidden');
     
-    // Clear icons and text to be safe
+    // Clear icons and text
     feedbackContent.textContent = '';
     feedbackText.textContent = '';
 
@@ -112,16 +136,6 @@ function updateState() {
     if (state.videoSrc) {
         playVideoSequence(state.videoSrc, state.feedback, currentState);
     }
-    
-    // Preload next video
-    const nextState = states[currentState + 1];
-    if (nextState && nextState.videoSrc) {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'video';
-        link.href = nextState.videoSrc;
-        document.head.appendChild(link);
-    }
 }
 
 function playVideoSequence(src, type, stateIndex) {
@@ -129,17 +143,21 @@ function playVideoSequence(src, type, stateIndex) {
     videoOverlay.classList.remove('hidden');
     nextBtn.disabled = true;
 
-    // Ensure loader is hidden initially unless it stays stuck for too long
-    loader.classList.add('hidden');
+    // Use preloaded video source if it exists
+    const preloaded = preloadedVideos.get(src);
+    if (preloaded) {
+        video.src = preloaded;
+    } else {
+        video.src = src;
+    }
 
-    video.src = src;
-
-    // Only show loader if video takes more than 400ms to start
+    // Since it's likely preloaded, it should play almost instantly
+    // Only show loader if video takes more than 300ms to start
     const loaderTimeout = setTimeout(() => {
         if (currentState === stateIndex && video.paused) {
             loader.classList.remove('hidden');
         }
-    }, 400);
+    }, 300);
 
     video.onplaying = () => {
         clearTimeout(loaderTimeout);
@@ -194,8 +212,6 @@ nextBtn.addEventListener('click', (e) => {
         video.onplaying = null;
         try {
             video.pause();
-            video.src = '';
-            video.load(); // Flush buffer
         } catch (err) {}
 
         currentState++;
@@ -206,4 +222,5 @@ nextBtn.addEventListener('click', (e) => {
 });
 
 // Initial start
+preloadAllVideos();
 updateState();

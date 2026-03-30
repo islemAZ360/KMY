@@ -21,7 +21,7 @@ run_git(["init"])
 run_git(["add", "."])
 
 # 3. Commit
-run_git(["commit", "-m", "Initial Professional KMU Presentation Release"])
+run_git(["commit", "-m", "Optimize video playback and preloading"])
 
 # 4. Branch
 run_git(["branch", "-M", "main"])
